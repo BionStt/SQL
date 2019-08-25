@@ -1,0 +1,33 @@
+﻿IF OBJECT_ID('[dbo].[Update]') IS NOT NULL
+BEGIN
+	DROP PROCEDURE [dbo].[Update]
+END
+GO
+
+SET ANSI_NULLS ON;
+GO
+SET QUOTED_IDENTIFIER ON;
+GO
+
+CREATE PROCEDURE [dbo].[Update]
+	@Id		INT,
+	@Name	VARCHAR(250)
+AS BEGIN
+	SET NOCOUNT ON;
+
+	SET	@Name = LTRIM(RTRIM(@Name));
+
+	IF(EXISTS(SELECT TOP 1 Id FROM [Table] WHERE UPPER(Name) = UPPER(@Name) AND Id <> @Id))
+		RAISERROR('Error.', 16, 1);
+	ELSE BEGIN
+		BEGIN TRY
+			UPDATE [Table] SET
+				Name = ISNULL(@Name, Name)
+			WHERE Id = @Id;
+		END TRY
+		BEGIN CATCH
+			RAISERROR('Error.', 16, 1);
+		END CATCH
+	END
+END
+GO

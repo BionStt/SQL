@@ -1,0 +1,1 @@
+EXEC SP_MSFOREACHDB 'USE [?]; SELECT ''?'' AS [Database], name AS [Name], object_id AS Id, type AS [Type], type_desc AS Description FROM SYS.OBJECTS WHERE NAME LIKE ''%SEARCH%'''
